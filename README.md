@@ -23,10 +23,11 @@ Hard negatives and generations were graded by an LLM and labeled as such in the 
 ```sh
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m probe --config config_poc.json --root artifacts-poc setup-poc
 .venv/bin/python -u -m probe --config config_poc.json --root artifacts-poc --device cpu run
 ```
 
-The command was designed to finish in roughly 5–10 minutes on the machine used for this project. It saves the report in `artifacts-poc/report/`.
+The checked-in data and negative judgments fix the evaluation set. The setup command downloads the pinned GPT-2 checkpoint; the run then took about 6½ minutes on the machine used for this project. It writes a preliminary report and a blinded generation review sheet. The checked-in [RESULTS.md](RESULTS.md) describes the completed, LLM-graded run.
 
 ## Project layout
 

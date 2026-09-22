@@ -7,7 +7,10 @@ __pycache__/
 # Large local data, model snapshots, and training checkpoints.
 artifacts/
 artifacts-poc/*
+!artifacts-poc/data/
+!artifacts-poc/data/**
 !artifacts-poc/report/
 !artifacts-poc/report/**
 !artifacts-poc/review/
 !artifacts-poc/review/llm_generation_grades.jsonl
+artifacts-poc/review/generation.jsonl

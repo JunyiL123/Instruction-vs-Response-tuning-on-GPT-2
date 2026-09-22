@@ -1,0 +1,54 @@
+{
+  "config": {
+    "model_id": "openai-community/gpt2",
+    "dataset_id": "databricks/databricks-dolly-15k",
+    "dataset_file": "databricks-dolly-15k.jsonl",
+    "seed": 42,
+    "max_sequence_tokens": 768,
+    "max_prompt_tokens": 512,
+    "max_response_tokens": 255,
+    "near_duplicate_similarity": 0.9,
+    "ranking_examples": 24,
+    "generation_examples": 8,
+    "negative_length_ratio": 1.25,
+    "hard_min_similarity": 0.05,
+    "epochs": 1,
+    "micro_batch_size": 1,
+    "effective_batch_size": 4,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_fraction": 0.1,
+    "max_grad_norm": 1.0,
+    "max_new_tokens": 48,
+    "bootstrap_samples": 1000
+  },
+  "sources": {
+    "model_id": "openai-community/gpt2",
+    "dataset_id": "databricks/databricks-dolly-15k",
+    "model_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "dataset_revision": "bdd27f4d94b9c1f951818a7da7fd7aeea5dbff1a",
+    "model_path": "/Users/junyiliu/Desktop/Instruction Tuning/.cache/huggingface/hub/models--openai-community--gpt2/snapshots/607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "dataset_path": "/Users/junyiliu/Desktop/Instruction Tuning/.cache/huggingface/hub/datasets--databricks--databricks-dolly-15k/snapshots/bdd27f4d94b9c1f951818a7da7fd7aeea5dbff1a/databricks-dolly-15k.jsonl"
+  },
+  "parent_experiment_id": "917a2f9aecee9aa2982245f4755f56f1ecb2efcf68051e889a522fe6a49ef165",
+  "scope": "proof of concept; fixed small subsets, one epoch, no replication claim",
+  "split_counts": {
+    "train": 24,
+    "validation": 8,
+    "test": 1360
+  },
+  "split_hashes": {
+    "train": "85f560c4f037ee7d8b4fac5a9d5fdd533a3068ab04472450c9be33180ba59f60",
+    "validation": "7dca4e125fc494d57b0f8ce4ea803e9cbab0915d80ab1fb731038c009f164034",
+    "test": "b00f8de876af42c16d008182caf26b6f7a375960e68cad455ef726068e815afe"
+  },
+  "candidates_hash": "8326623301624861b54c4514d639064c28a17c7d23bdb0adf24fb3b4b1bfaaf1",
+  "generation_ids_hash": "187481bf569ef6064ec4fedb5afbff51c1492b813ad9aa94f6980b3cd3f452f7",
+  "adjudication": {
+    "type": "llm",
+    "reviewed": 24,
+    "selected_from": 48,
+    "selection_before_model_evaluation": true
+  },
+  "experiment_id": "22310bf88d0811dfc6dcfc9a4acc642956fd508aaacd53bc4471fc00632ce636"
+}

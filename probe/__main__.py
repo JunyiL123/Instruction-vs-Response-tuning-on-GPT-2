@@ -12,6 +12,7 @@ def main():
     subs = parser.add_subparsers(dest="command", required=True)
     subs.add_parser("prepare")
     subs.add_parser("audit")
+    subs.add_parser("setup-poc")
     train_parser = subs.add_parser("train")
     train_parser.add_argument("--mode", required=True, choices=["response", "instruction"])
     train_parser.add_argument("--smoke-steps", type=int, default=0)
@@ -34,6 +35,9 @@ def main():
     if args.command == "prepare":
         from .data import prepare
         prepare(cfg, root)
+    elif args.command == "setup-poc":
+        from .setup_poc import setup
+        setup(root)
     elif args.command == "audit":
         from .data import verify, validated_pairs
         manifest = verify(root)

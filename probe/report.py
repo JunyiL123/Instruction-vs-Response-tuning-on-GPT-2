@@ -145,15 +145,17 @@ def report(cfg, root, final=False):
         r = results.get(condition, {"ranking": {}, "generation": {}})
         values = [formatted(r["ranking"].get(key)) for key in ["easy:conditional.sum", "hard:conditional.sum", "easy:conditional.mean", "hard:conditional.mean"]]
         header.append("| " + " | ".join([condition] + values + [formatted(r["generation"].get("success"))]) + " |")
+    capped = {condition: sum(bool(r.get("hit_token_limit", False)) for r in read_jsonl(root / "evaluation" / condition / "generations.jsonl"))
+              for condition in results}
     methods = f"""
 
 **Question.** Does pretrained GPT-2 124M associate instructions with appropriate responses, and does tuning on responses alone change ranking and generation compared with instruction tuning?
 
 **Setup.** Dolly, cleaned and split by duplicate groups: {manifest['split_counts']}. The frozen ranking set contains {cfg['ranking_examples']} prompts; generation uses {cfg['generation_examples']} of those prompts. Sampling cycles through categories, but eligible negative availability limits their representation: {dict(Counter(r['category'] for r in read_jsonl(root / 'data' / 'candidates.jsonl')))}. Each prompt has one different-category negative and one same-category, lexically related negative. Both negatives have response-token length ratio at most {cfg['negative_length_ratio']}. The dataset revision is `{manifest['sources']['dataset_revision']}`; GPT-2 revision is `{manifest['sources']['model_revision']}`. Full-parameter tuning uses {cfg['epochs']} epoch(s), AdamW at {cfg['learning_rate']}, effective batch {cfg['effective_batch_size']}, and identical response exposure. Each condition selects its epoch by validation loss under its own objective.
 
-**Metrics.** Ranking means the correct response has strictly greater likelihood than the alternative. Main scores exclude EOS; EOS-inclusive totals, unconditional scores, conditioning gains, category results, tie rates, and paired differences are in results.json. Brackets are 95% percentile intervals from {cfg['bootstrap_samples']} bootstrap resamples of prompt duplicate groups. Generation succeeds only when the blinded LLM grader marks both task adherence and substantial correctness true.
+**Metrics.** Ranking means the correct response has strictly greater likelihood than the alternative. Main scores exclude EOS; EOS-inclusive totals, unconditional scores, conditioning gains, category results, tie rates, and paired differences are in results.json. Brackets are 95% percentile intervals from {cfg['bootstrap_samples']} bootstrap resamples of prompt duplicate groups. Generation succeeds only when the blinded LLM grader marks both task adherence and substantial correctness true. Outputs that hit the {cfg.get('max_new_tokens', 'configured')}-token generation cap: {capped}.
 
-**Limits.** This is deliberately a five-to-ten-minute proof of concept: 24 ranking prompts, 8 generated prompts, one seed, and one short tuning epoch. It is inspired by [Hewitt et al., §4.2](https://arxiv.org/pdf/2409.14254), with a different model scale, dataset, and prompt format. Ranking supplied responses does not establish an ability to generate them. Hard negatives and generated answers were assessed by a recorded LLM adjudicator, so a human check would be required for a research claim. Duplicate checks cover the documented lexical threshold and shared-context rules, not every semantic paraphrase or pretraining overlap. Intervals capture sampled-prompt uncertainty, not training-seed variation, adjudicator error, or all dependence from reused negative answers.
+**Limits.** This is deliberately a five-to-ten-minute proof of concept: 24 ranking prompts, 8 generated prompts, one seed, and one short tuning epoch. It is inspired by [Hewitt et al., §4.2](https://arxiv.org/pdf/2409.14254), with a different model scale, dataset, and prompt format. Ranking supplied responses does not establish an ability to generate them. The 48-token cap and greedy decoding limit what the zero generation score means; a bootstrap interval of [0, 0] here is not evidence of certain failure on new prompts. Hard negatives and generated answers were assessed by a recorded LLM adjudicator, so a human check would be required for a research claim. Duplicate checks cover the documented lexical threshold and shared-context rules, not every semantic paraphrase or pretraining overlap. Intervals capture sampled-prompt uncertainty, not training-seed variation, adjudicator error, or all dependence from reused negative answers.
 """
     (output / "note.md").write_text("\n".join(header) + methods)
     if results:
@@ -186,20 +188,24 @@ def plot_results(results, output):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.2), sharey=True)
     names = list(results)
     x = np.arange(len(names))
-    for offset, negative, color in [(-.18, "easy", "#2878a0"), (.18, "hard", "#d38630")]:
-        stats = [results[name]["ranking"][negative + ":conditional.mean"] for name in names]
-        y = np.array([r["estimate"] for r in stats]) * 100
-        low = np.array([r["low"] for r in stats]) * 100
-        high = np.array([r["high"] for r in stats]) * 100
-        ax.bar(x+offset, y, width=.34, label=negative.capitalize(), color=color)
-        ax.errorbar(x+offset, y, yerr=np.maximum(0, np.vstack([y-low, high-y])), fmt="none", color="black", capsize=3)
-    ax.axhline(50, ls="--", color="gray", lw=1)
-    ax.set(xticks=x, xticklabels=names, ylabel="Response ranking accuracy (%)", ylim=(0, 100),
-           title="GPT-2: per-token response likelihood")
-    ax.legend(frameon=False)
+    for ax, (measure, title) in zip(axes, [("sum", "Total response log P"),
+                                           ("mean", "Mean log P per token")]):
+        for offset, negative, color in [(-.18, "easy", "#2878a0"), (.18, "hard", "#d38630")]:
+            stats = [results[name]["ranking"][f"{negative}:conditional.{measure}"] for name in names]
+            y = np.array([r["estimate"] for r in stats]) * 100
+            low = np.array([r["low"] for r in stats]) * 100
+            high = np.array([r["high"] for r in stats]) * 100
+            ax.bar(x+offset, y, width=.34, label=negative.capitalize(), color=color)
+            ax.errorbar(x+offset, y, yerr=np.maximum(0, np.vstack([y-low, high-y])),
+                        fmt="none", color="black", capsize=3)
+        ax.axhline(50, ls="--", color="gray", lw=1)
+        ax.set(xticks=x, xticklabels=names, ylim=(0, 105), title=title)
+    axes[0].set_ylabel("Correct response preferred (%)")
+    axes[1].legend(frameon=False, loc="lower right")
+    fig.suptitle("GPT-2 response ranking on 24 held-out prompts")
     fig.tight_layout()
     fig.savefig(output / "ranking.png", dpi=200)
     plt.close(fig)
