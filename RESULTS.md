@@ -12,15 +12,16 @@ P(\text{correct response}\mid\text{instruction}) > P(\text{hard negative}\mid\te
 
 ## Result table
 
-| Model | Selected update | Hard, total log P | Hard, per token | Easy, total log P | Easy, per token |
+| Model / checkpoint | Update | Hard, total log P | Hard, per token | Easy, total log P | Easy, per token |
 |---|---:|---:|---:|---:|---:|
 | Pretrained GPT-2 | — | 17/24 (70.8%) | 16/24 (66.7%) | 21/24 (87.5%) | 21/24 (87.5%) |
-| Response-only tuned | 12 | 16/24 (66.7%) | 15/24 (62.5%) | 22/24 (91.7%) | 21/24 (87.5%) |
-| Instruction-tuned | 24 | 16/24 (66.7%) | 16/24 (66.7%) | 21/24 (87.5%) | 21/24 (87.5%) |
+| Response-only, validation choice | 12 | 16/24 (66.7%) | 15/24 (62.5%) | 22/24 (91.7%) | 21/24 (87.5%) |
+| Response-only, fixed-update check | 24 | 16/24 (66.7%) | 15/24 (62.5%) | 21/24 (87.5%) | 21/24 (87.5%) |
+| Instruction-tuned, validation choice | 24 | 16/24 (66.7%) | 16/24 (66.7%) | 21/24 (87.5%) | 21/24 (87.5%) |
 
 ![Response ranking using total and per-token log probability](artifacts-poc/report/ranking.png)
 
-The total log probability comparison uses the response-ranking definition in [Hewitt et al., §4.2](https://arxiv.org/pdf/2409.14254). The per-token version checks whether the result depends on response length. A hard negative is a related answer from the same Dolly category; an easy negative comes from a different category.
+The chart shows the validation-selected checkpoints. The fixed-update row is a separate check using the response-only checkpoint after update 24. The total log probability comparison uses the response-ranking definition in [Hewitt et al., §4.2](https://arxiv.org/pdf/2409.14254). The per-token version checks whether the result depends on response length. A hard negative is a related answer from the same Dolly category; an easy negative comes from a different category.
 
 ## Interpretation
 
