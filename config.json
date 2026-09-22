@@ -1,0 +1,23 @@
+{
+  "model_id": "openai-community/gpt2",
+  "dataset_id": "databricks/databricks-dolly-15k",
+  "dataset_file": "databricks-dolly-15k.jsonl",
+  "seed": 42,
+  "max_sequence_tokens": 768,
+  "max_prompt_tokens": 512,
+  "max_response_tokens": 255,
+  "near_duplicate_similarity": 0.90,
+  "ranking_examples": 200,
+  "generation_examples": 100,
+  "negative_length_ratio": 1.25,
+  "hard_min_similarity": 0.05,
+  "epochs": 3,
+  "micro_batch_size": 1,
+  "effective_batch_size": 16,
+  "learning_rate": 0.00005,
+  "weight_decay": 0.01,
+  "warmup_fraction": 0.05,
+  "max_grad_norm": 1.0,
+  "max_new_tokens": 256,
+  "bootstrap_samples": 5000
+}

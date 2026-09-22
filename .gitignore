@@ -1,0 +1,13 @@
+.venv/
+.cache/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Large local data, model snapshots, and training checkpoints.
+artifacts/
+artifacts-poc/*
+!artifacts-poc/report/
+!artifacts-poc/report/**
+!artifacts-poc/review/
+!artifacts-poc/review/llm_generation_grades.jsonl

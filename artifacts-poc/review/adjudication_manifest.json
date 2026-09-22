@@ -1,0 +1,7 @@
+{
+  "type": "llm",
+  "reviewed": 24,
+  "selected_from": 48,
+  "selection_before_model_evaluation": true,
+  "source_batches": 5
+}

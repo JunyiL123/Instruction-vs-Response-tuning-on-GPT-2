@@ -1,0 +1,7 @@
+torch==2.8.0
+transformers==4.57.1
+huggingface-hub==0.36.0
+numpy==2.2.6
+scikit-learn==1.7.2
+matplotlib==3.10.7
+pytest==8.4.2
