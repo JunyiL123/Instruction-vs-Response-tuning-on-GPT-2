@@ -88,18 +88,30 @@ def report(cfg, root, final=False):
     require(not final or ready, "Final reporting requires all three models and approved negatives")
     status = "LLM-adjudicated ranking result" if ready else "PRELIMINARY — ranking evaluation is incomplete"
     output = root / "report"
+    training = {}
+    for condition in ["response", "instruction"]:
+        selection = root / "runs" / condition / "best" / "selection.json"
+        metadata = root / "runs" / condition / "training.json"
+        if selection.exists() and metadata.exists():
+            selected = read_json(selection)
+            run = read_json(metadata)
+            training[condition] = {"updates_completed": run["updates"],
+                                   "selected_update": selected["update"],
+                                   "selected_epoch": selected["epoch"],
+                                   "validation_response_nll": selected["validation_response_nll"]}
     write_json(output / "results.json", {"status": status, "ranking_complete": ready, "experiment_id": manifest["experiment_id"],
-                                         "models": results, "paired_differences": differences,
+                                         "models": results, "training": training, "paired_differences": differences,
                                          "negative_review_hash": digest(read_jsonl(root / "review" / "negatives.jsonl")),
                                          "negative_adjudication_type": review_type,
                                          "negative_adjudication_complete": negatives_complete})
     header = ["# GPT-2 instruction–response matching", "", status, "",
-              "| Checkpoint | Easy: total log P | Hard: total log P | Easy: per token | Hard: per token |",
-              "|---|---|---|---|---|"]
+              "| Checkpoint | Selected update | Easy: total log P | Hard: total log P | Easy: per token | Hard: per token |",
+              "|---|---:|---|---|---|---|"]
     for condition in CONDITIONS:
         r = results.get(condition, {"ranking": {}})
         values = [formatted(r["ranking"].get(key)) for key in ["easy:conditional.sum", "hard:conditional.sum", "easy:conditional.mean", "hard:conditional.mean"]]
-        header.append("| " + " | ".join([condition] + values) + " |")
+        selected_update = str(training[condition]["selected_update"]) if condition in training else "—"
+        header.append("| " + " | ".join([condition, selected_update] + values) + " |")
     split_counts = manifest["split_counts"]
     splits = f"{split_counts['train']} train, {split_counts['validation']} validation, {split_counts['test']} test"
     categories = Counter(r["category"] for r in read_jsonl(root / "data" / "candidates.jsonl"))
@@ -109,11 +121,11 @@ def report(cfg, root, final=False):
 
 **Question.** Does pretrained GPT-2 124M associate instructions with appropriate responses, and does tuning on responses alone change that ranking compared with instruction tuning?
 
-**Setup.** Dolly was cleaned and split by duplicate groups: {splits}. The ranking set contains {cfg['ranking_examples']} prompts across these categories: {category_counts}. Each prompt has one different-category negative and one related same-category negative. Both negatives have response-token length ratio at most {cfg['negative_length_ratio']}. Dataset revision: `{manifest['sources']['dataset_revision']}`; GPT-2 revision: `{manifest['sources']['model_revision']}`. Both tuned models saw the same responses for {cfg['epochs']} {epoch_word}, using AdamW at {cfg['learning_rate']} and effective batch {cfg['effective_batch_size']}. Each checkpoint was selected by validation loss under its own objective.
+**Setup.** Dolly was cleaned and split by duplicate groups: {splits}. The ranking set contains {cfg['ranking_examples']} prompts across these categories: {category_counts}. Each prompt has one different-category negative and one related same-category negative. Both negatives have response-token length ratio at most {cfg['negative_length_ratio']}. Dataset revision: `{manifest['sources']['dataset_revision']}`; GPT-2 revision: `{manifest['sources']['model_revision']}`. Both tuned models saw the same responses for {cfg['epochs']} {epoch_word}, using AdamW at {cfg['learning_rate']} and effective batch {cfg['effective_batch_size']}. Each run completed {training.get('response', {}).get('updates_completed', 'pending')} updates; the table reports the update count of the checkpoint selected by validation loss under each objective.
 
 **Metrics.** Ranking means the correct response has strictly greater likelihood than the alternative. Main scores exclude EOS; EOS-inclusive totals, unconditional scores, conditioning gains, category results, tie rates, and paired differences are in results.json. Brackets are 95% percentile intervals from {cfg['bootstrap_samples']} bootstrap resamples of prompt duplicate groups.
 
-**Limits.** This is a small, one-seed ranking experiment with one short tuning epoch. The response-ranking definition follows [Hewitt et al., §4.2](https://arxiv.org/pdf/2409.14254). Hard negatives were assessed by a recorded LLM adjudicator. Duplicate checks cover the documented lexical threshold and shared-context rules, not every semantic paraphrase or pretraining overlap. Intervals capture sampled-prompt uncertainty, not training-seed variation, adjudicator error, or all dependence from reused negative answers.
+**Limits.** This is a small, one-seed ranking experiment with {cfg['epochs']} tuning {epoch_word}. The response-ranking definition follows [Hewitt et al., §4.2](https://arxiv.org/pdf/2409.14254). Hard negatives were assessed by a recorded LLM adjudicator. Duplicate checks cover the documented lexical threshold and shared-context rules, not every semantic paraphrase or pretraining overlap. Intervals capture sampled-prompt uncertainty, not training-seed variation, adjudicator error, or all dependence from reused negative answers.
 """
     (output / "note.md").write_text("\n".join(header) + methods)
     if results:

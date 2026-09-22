@@ -236,24 +236,24 @@
     "response": {
       "ranking": {
         "easy:conditional.sum": {
-          "estimate": 0.875,
-          "low": 0.7083333333333334,
+          "estimate": 0.9166666666666666,
+          "low": 0.7916666666666666,
           "high": 1.0,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
         },
         "easy:conditional.mean": {
-          "estimate": 0.8333333333333334,
-          "low": 0.6666666666666666,
-          "high": 0.9583333333333334,
+          "estimate": 0.875,
+          "low": 0.75,
+          "high": 1.0,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
         },
         "easy:conditional.sum_with_eos": {
-          "estimate": 0.875,
-          "low": 0.7083333333333334,
+          "estimate": 0.9166666666666666,
+          "low": 0.7916666666666666,
           "high": 1.0,
           "n": 24,
           "groups": 24,
@@ -292,14 +292,6 @@
           "tie_rate": 0.0
         },
         "hard:conditional.sum": {
-          "estimate": 0.7083333333333334,
-          "low": 0.5,
-          "high": 0.875,
-          "n": 24,
-          "groups": 24,
-          "tie_rate": 0.0
-        },
-        "hard:conditional.mean": {
           "estimate": 0.6666666666666666,
           "low": 0.4583333333333333,
           "high": 0.8333333333333334,
@@ -307,10 +299,18 @@
           "groups": 24,
           "tie_rate": 0.0
         },
+        "hard:conditional.mean": {
+          "estimate": 0.625,
+          "low": 0.4166666666666667,
+          "high": 0.7916666666666666,
+          "n": 24,
+          "groups": 24,
+          "tie_rate": 0.0
+        },
         "hard:conditional.sum_with_eos": {
-          "estimate": 0.7083333333333334,
-          "low": 0.5,
-          "high": 0.875,
+          "estimate": 0.6666666666666666,
+          "low": 0.4583333333333333,
+          "high": 0.8333333333333334,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
@@ -374,8 +374,8 @@
             "groups": 4
           },
           "hard": {
-            "estimate": 1.0,
-            "low": 1.0,
+            "estimate": 0.75,
+            "low": 0.25,
             "high": 1.0,
             "n": 4,
             "groups": 4
@@ -399,8 +399,8 @@
         },
         "creative_writing": {
           "easy": {
-            "estimate": 0.75,
-            "low": 0.25,
+            "estimate": 1.0,
+            "low": 1.0,
             "high": 1.0,
             "n": 4,
             "groups": 4
@@ -466,24 +466,24 @@
     "instruction": {
       "ranking": {
         "easy:conditional.sum": {
-          "estimate": 0.9166666666666666,
-          "low": 0.7916666666666666,
+          "estimate": 0.875,
+          "low": 0.75,
           "high": 1.0,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
         },
         "easy:conditional.mean": {
-          "estimate": 0.8333333333333334,
-          "low": 0.6666666666666666,
-          "high": 0.9583333333333334,
+          "estimate": 0.875,
+          "low": 0.75,
+          "high": 1.0,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
         },
         "easy:conditional.sum_with_eos": {
-          "estimate": 0.9166666666666666,
-          "low": 0.7916666666666666,
+          "estimate": 0.875,
+          "low": 0.75,
           "high": 1.0,
           "n": 24,
           "groups": 24,
@@ -522,9 +522,9 @@
           "tie_rate": 0.0
         },
         "hard:conditional.sum": {
-          "estimate": 0.7083333333333334,
-          "low": 0.5,
-          "high": 0.875,
+          "estimate": 0.6666666666666666,
+          "low": 0.4583333333333333,
+          "high": 0.8333333333333334,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
@@ -538,17 +538,17 @@
           "tie_rate": 0.0
         },
         "hard:conditional.sum_with_eos": {
-          "estimate": 0.7083333333333334,
-          "low": 0.5,
-          "high": 0.875,
+          "estimate": 0.6666666666666666,
+          "low": 0.4583333333333333,
+          "high": 0.8333333333333334,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
         },
         "hard:prior.sum": {
-          "estimate": 0.4166666666666667,
-          "low": 0.20833333333333334,
-          "high": 0.625,
+          "estimate": 0.3333333333333333,
+          "low": 0.125,
+          "high": 0.5416666666666666,
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
@@ -629,8 +629,8 @@
         },
         "creative_writing": {
           "easy": {
-            "estimate": 0.75,
-            "low": 0.25,
+            "estimate": 1.0,
+            "low": 1.0,
             "high": 1.0,
             "n": 4,
             "groups": 4
@@ -694,26 +694,40 @@
       }
     }
   },
+  "training": {
+    "response": {
+      "updates_completed": 24,
+      "selected_update": 12,
+      "selected_epoch": 1,
+      "validation_response_nll": 3.1775869605654763
+    },
+    "instruction": {
+      "updates_completed": 24,
+      "selected_update": 24,
+      "selected_epoch": 2,
+      "validation_response_nll": 2.7441671534946988
+    }
+  },
   "paired_differences": {
     "response minus base": {
       "easy:conditional.sum": {
-        "estimate": 0.0,
+        "estimate": 0.041666666666666664,
         "low": 0.0,
-        "high": 0.0,
+        "high": 0.125,
         "n": 24,
         "groups": 24
       },
       "easy:conditional.mean": {
-        "estimate": -0.041666666666666664,
+        "estimate": 0.0,
         "low": -0.125,
-        "high": 0.0,
+        "high": 0.125,
         "n": 24,
         "groups": 24
       },
       "easy:conditional.sum_with_eos": {
-        "estimate": 0.0,
+        "estimate": 0.041666666666666664,
         "low": 0.0,
-        "high": 0.0,
+        "high": 0.125,
         "n": 24,
         "groups": 24
       },
@@ -746,22 +760,22 @@
         "groups": 24
       },
       "hard:conditional.sum": {
-        "estimate": 0.0,
-        "low": 0.0,
+        "estimate": -0.041666666666666664,
+        "low": -0.125,
         "high": 0.0,
         "n": 24,
         "groups": 24
       },
       "hard:conditional.mean": {
-        "estimate": 0.0,
-        "low": 0.0,
+        "estimate": -0.041666666666666664,
+        "low": -0.125,
         "high": 0.0,
         "n": 24,
         "groups": 24
       },
       "hard:conditional.sum_with_eos": {
-        "estimate": 0.0,
-        "low": 0.0,
+        "estimate": -0.041666666666666664,
+        "low": -0.125,
         "high": 0.0,
         "n": 24,
         "groups": 24
@@ -797,22 +811,22 @@
     },
     "instruction minus base": {
       "easy:conditional.sum": {
-        "estimate": 0.041666666666666664,
-        "low": 0.0,
+        "estimate": 0.0,
+        "low": -0.125,
         "high": 0.125,
         "n": 24,
         "groups": 24
       },
       "easy:conditional.mean": {
-        "estimate": -0.041666666666666664,
+        "estimate": 0.0,
         "low": -0.125,
-        "high": 0.0,
+        "high": 0.125,
         "n": 24,
         "groups": 24
       },
       "easy:conditional.sum_with_eos": {
-        "estimate": 0.041666666666666664,
-        "low": 0.0,
+        "estimate": 0.0,
+        "low": -0.125,
         "high": 0.125,
         "n": 24,
         "groups": 24
@@ -846,8 +860,8 @@
         "groups": 24
       },
       "hard:conditional.sum": {
-        "estimate": 0.0,
-        "low": 0.0,
+        "estimate": -0.041666666666666664,
+        "low": -0.125,
         "high": 0.0,
         "n": 24,
         "groups": 24
@@ -860,16 +874,16 @@
         "groups": 24
       },
       "hard:conditional.sum_with_eos": {
-        "estimate": 0.0,
-        "low": 0.0,
+        "estimate": -0.041666666666666664,
+        "low": -0.125,
         "high": 0.0,
         "n": 24,
         "groups": 24
       },
       "hard:prior.sum": {
-        "estimate": 0.041666666666666664,
-        "low": 0.0,
-        "high": 0.125,
+        "estimate": -0.041666666666666664,
+        "low": -0.125,
+        "high": 0.0,
         "n": 24,
         "groups": 24
       },
@@ -897,9 +911,9 @@
     },
     "response minus instruction": {
       "easy:conditional.sum": {
-        "estimate": -0.041666666666666664,
-        "low": -0.125,
-        "high": 0.0,
+        "estimate": 0.041666666666666664,
+        "low": 0.0,
+        "high": 0.125,
         "n": 24,
         "groups": 24
       },
@@ -911,9 +925,9 @@
         "groups": 24
       },
       "easy:conditional.sum_with_eos": {
-        "estimate": -0.041666666666666664,
-        "low": -0.125,
-        "high": 0.0,
+        "estimate": 0.041666666666666664,
+        "low": 0.0,
+        "high": 0.125,
         "n": 24,
         "groups": 24
       },
@@ -953,9 +967,9 @@
         "groups": 24
       },
       "hard:conditional.mean": {
-        "estimate": 0.0,
+        "estimate": -0.041666666666666664,
         "low": -0.125,
-        "high": 0.125,
+        "high": 0.0,
         "n": 24,
         "groups": 24
       },
@@ -967,9 +981,9 @@
         "groups": 24
       },
       "hard:prior.sum": {
-        "estimate": -0.041666666666666664,
-        "low": -0.125,
-        "high": 0.0,
+        "estimate": 0.041666666666666664,
+        "low": 0.0,
+        "high": 0.125,
         "n": 24,
         "groups": 24
       },

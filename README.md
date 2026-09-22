@@ -6,14 +6,14 @@ Hewitt et al. define response ranking as “assigning a higher likelihood to the
 
 See **[RESULTS.md](RESULTS.md)** for the result table, interpretation, and chart.
 
-In this 24-item run, response-only and instruction tuning tied on hard-negative ranking: **17/24 (70.8%)** using total log probability and **16/24 (66.7%)** per token.
+With longer tuning, both models completed 24 updates. Validation selected the response-only checkpoint at update 12 and the instruction-tuned checkpoint at update 24. On hard negatives, both scored **16/24 (66.7%)** using total log probability; per-token scores were **15/24** and **16/24**, respectively.
 
 ## What I ran
 
 - Model: GPT-2 small (124M)
 - Data: Databricks Dolly 15K
 - Conditions: pretrained, response-only fine tuning, instruction fine tuning
-- Fine tuning: 24 training examples, 1 epoch, same responses in both tuning conditions
+- Fine tuning: 24 training examples, 2 epochs, effective batch 2, same responses in both tuning conditions
 - Evaluation: 24 held-out response-ranking items
 
 An LLM checked the hard negatives for accidental correctness. Its judgments are labeled in the data.
@@ -27,7 +27,7 @@ python3 -m venv .venv
 .venv/bin/python -u -m probe --config config_poc.json --root artifacts-poc --device cpu run
 ```
 
-The checked-in data and negative judgments fix the evaluation set. The setup command downloads the pinned GPT-2 checkpoint. The original local run took about 6½ minutes; this configuration evaluates response ranking and writes the report to `artifacts-poc/report/`.
+The checked-in data and negative judgments fix the evaluation set. The setup command downloads the pinned GPT-2 checkpoint. This ranking run took about six minutes locally and writes the report to `artifacts-poc/report/`.
 
 ## Project layout
 
