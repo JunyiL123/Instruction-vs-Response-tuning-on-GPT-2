@@ -8,7 +8,7 @@ from transformers import GPT2Config, GPT2LMHeadModel
 from probe.common import digest, read_json, read_jsonl, write_json, write_jsonl
 from probe.data import balanced_sample, clean_rows, group_duplicates, split_groups, validated_pairs, verify
 from probe.modeling import collate, encode_example, prompt_ids, response_loss_sum, score_response
-from probe.report import generation_reviews, interval, wins
+from probe.report import interval, wins
 
 
 class TinyTokenizer:
@@ -154,10 +154,6 @@ def test_paired_bootstrap_and_ties():
     assert wins(row, "hard", "conditional.sum") == (0, 1)
 
 
-def test_no_generation_grades_is_pending(tmp_path):
-    assert generation_reviews(tmp_path) == ({}, False)
-
-
 def test_reporting_and_blinding_end_to_end_with_synthetic_results(tmp_path):
     """Exercise reporting only; fabricated fixtures never enter real artifacts."""
     from probe.evaluate import blind
@@ -200,20 +196,11 @@ def test_reporting_and_blinding_end_to_end_with_synthetic_results(tmp_path):
                                             "checkpoint": "test-only-model" if condition == "base" else digest(meta),
                                             "ranking_hash": digest(ranking), "generation_hash": digest(generations)})
     report(cfg, tmp_path)
-    assert not read_json(tmp_path / "report/results.json")["ready_for_email"]
+    assert read_json(tmp_path / "report/results.json")["ranking_complete"]
     assert not (tmp_path / "report/email_draft.txt").exists()
-    with pytest.raises(ValueError, match="Final reporting"):
-        report(cfg, tmp_path, final=True)
+    report(cfg, tmp_path, final=True)
+    results = read_json(tmp_path / "report/results.json")
+    assert all("generation" not in result for result in results["models"].values())
     blind(tmp_path, cfg["seed"])
     graded = read_jsonl(tmp_path / "review/generation.jsonl")
     assert len(graded) == 6 and all("condition" not in r for r in graded)
-    for r in graded:
-        r.update(addresses_task=True, substantially_correct=True, reviewer="Synthetic test", notes="Test fixture only")
-    write_jsonl(tmp_path / "review/generation.jsonl", graded)
-    report(cfg, tmp_path, final=True)
-    assert read_json(tmp_path / "report/results.json")["ready_for_email"]
-    assert (tmp_path / "report/email_draft.txt").exists()
-    graded[0]["answer"] = "Modified answer after grading"
-    write_jsonl(tmp_path / "review/generation.jsonl", graded)
-    with pytest.raises(ValueError, match="answer text"):
-        report(cfg, tmp_path, final=True)

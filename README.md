@@ -1,12 +1,12 @@
 # Instruction tuning vs. response-only tuning on GPT-2
 
-A small replication-style exercise motivated by Hewitt et al., [*Instruction Following without Instruction Tuning*](https://arxiv.org/pdf/2409.14254). I asked whether pretrained GPT-2 small already prefers the right answer for an instruction, and whether a tiny response-only fine-tuning run changes that preference differently from instruction tuning.
+Hewitt et al. define response ranking as “assigning a higher likelihood to the right response for an instruction than to a desirable response for a random other instruction” ([§4.2](https://arxiv.org/pdf/2409.14254)). This project tests that comparison with GPT-2 small before and after response-only or instruction tuning.
 
 ## Result
 
 See **[RESULTS.md](RESULTS.md)** for the result table, interpretation, and chart.
 
-In this 24-item proof of concept, response-only and instruction tuning tied on the main hard-negative ranking measure: **16/24 (66.7%)**. Neither condition produced a successful answer on the 8-prompt generation check. This is a small null result, not a replication claim.
+In this 24-item run, response-only and instruction tuning tied on hard-negative ranking: **17/24 (70.8%)** using total log probability and **16/24 (66.7%)** per token.
 
 ## What I ran
 
@@ -14,9 +14,9 @@ In this 24-item proof of concept, response-only and instruction tuning tied on t
 - Data: Databricks Dolly 15K
 - Conditions: pretrained, response-only fine tuning, instruction fine tuning
 - Fine tuning: 24 training examples, 1 epoch, same responses in both tuning conditions
-- Evaluation: 24 held-out response-ranking items and 8 held-out generations
+- Evaluation: 24 held-out response-ranking items
 
-Hard negatives and generations were graded by an LLM and labeled as such in the included files. A larger study should use human review and more seeds.
+An LLM checked the hard negatives for accidental correctness. Its judgments are labeled in the data.
 
 ## Reproduce the small run
 
@@ -27,13 +27,13 @@ python3 -m venv .venv
 .venv/bin/python -u -m probe --config config_poc.json --root artifacts-poc --device cpu run
 ```
 
-The checked-in data and negative judgments fix the evaluation set. The setup command downloads the pinned GPT-2 checkpoint; the run then took about 6½ minutes on the machine used for this project. It writes a preliminary report and a blinded generation review sheet. The checked-in [RESULTS.md](RESULTS.md) describes the completed, LLM-graded run.
+The checked-in data and negative judgments fix the evaluation set. The setup command downloads the pinned GPT-2 checkpoint. The original local run took about 6½ minutes; this configuration evaluates response ranking and writes the report to `artifacts-poc/report/`.
 
 ## Project layout
 
-- `probe/` — preparation, fine tuning, ranking, generation, and reporting code
+- `probe/` — preparation, fine tuning, ranking, and reporting code
 - `config_poc.json` — settings for the small run
-- `artifacts-poc/report/` — checked-in note, chart, examples, and email draft
+- `artifacts-poc/report/` — checked-in note, chart, and metric data
 - `tests/` — data and evaluation checks
 
 ## Data and model

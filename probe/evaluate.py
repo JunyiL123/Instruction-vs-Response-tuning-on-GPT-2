@@ -58,7 +58,7 @@ def evaluate(cfg, root, condition, requested_device, allow_unreviewed=False):
     generations_path = out / "generations.jsonl"
     generations = read_jsonl(generations_path) if generations_path.exists() else []
     generated = {r["id"] for r in generations}
-    for item_id in read_json(root / "data" / "generation_ids.json"):
+    for item_id in ([] if cfg.get("ranking_only", False) else read_json(root / "data" / "generation_ids.json")):
         if item_id in generated:
             continue
         r = test[item_id]

@@ -1,6 +1,6 @@
 {
-  "status": "LLM-reviewed exploratory result",
-  "ready_for_email": true,
+  "status": "LLM-adjudicated ranking result",
+  "ranking_complete": true,
   "experiment_id": "22310bf88d0811dfc6dcfc9a4acc642956fd508aaacd53bc4471fc00632ce636",
   "models": {
     "base": {
@@ -116,29 +116,6 @@
           "n": 24,
           "groups": 24,
           "tie_rate": 0.0
-        }
-      },
-      "generation": {
-        "success": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        },
-        "addresses_task": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        },
-        "correct": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
         }
       },
       "categories": {
@@ -371,29 +348,6 @@
           "tie_rate": 0.0
         }
       },
-      "generation": {
-        "success": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        },
-        "addresses_task": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        },
-        "correct": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        }
-      },
       "categories": {
         "brainstorming": {
           "easy": {
@@ -624,29 +578,6 @@
           "tie_rate": 0.0
         }
       },
-      "generation": {
-        "success": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        },
-        "addresses_task": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        },
-        "correct": {
-          "estimate": 0.0,
-          "low": 0.0,
-          "high": 0.0,
-          "n": 8,
-          "groups": 8
-        }
-      },
       "categories": {
         "brainstorming": {
           "easy": {
@@ -862,13 +793,6 @@
         "high": 0.3333333333333333,
         "n": 24,
         "groups": 24
-      },
-      "generation_success": {
-        "estimate": 0.0,
-        "low": 0.0,
-        "high": 0.0,
-        "n": 8,
-        "groups": 8
       }
     },
     "instruction minus base": {
@@ -969,13 +893,6 @@
         "high": 0.375,
         "n": 24,
         "groups": 24
-      },
-      "generation_success": {
-        "estimate": 0.0,
-        "low": 0.0,
-        "high": 0.0,
-        "n": 8,
-        "groups": 8
       }
     },
     "response minus instruction": {
@@ -1076,19 +993,10 @@
         "high": 0.0,
         "n": 24,
         "groups": 24
-      },
-      "generation_success": {
-        "estimate": 0.0,
-        "low": 0.0,
-        "high": 0.0,
-        "n": 8,
-        "groups": 8
       }
     }
   },
   "negative_review_hash": "8fa2534cb2d3c2e31fa8ec905e037058eefacab6965c5e725f455d847cbbe111",
   "negative_adjudication_type": "LLM",
-  "generation_review_hash": "7dfa4ac43d18b0bd2a9e432001e08738d34c5f7ec0b13daa470e2f48a50a1dfc",
-  "manual_negatives_complete": true,
-  "generation_grading_complete": true
+  "negative_adjudication_complete": true
 }

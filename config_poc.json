@@ -9,6 +9,7 @@
   "near_duplicate_similarity": 0.9,
   "ranking_examples": 24,
   "generation_examples": 8,
+  "ranking_only": true,
   "negative_length_ratio": 1.25,
   "hard_min_similarity": 0.05,
   "epochs": 1,

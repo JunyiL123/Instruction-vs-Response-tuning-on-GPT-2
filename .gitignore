@@ -11,6 +11,11 @@ artifacts-poc/*
 !artifacts-poc/data/**
 !artifacts-poc/report/
 !artifacts-poc/report/**
+artifacts-poc/report/email_draft.txt
+artifacts-poc/report/examples.md
+artifacts-poc/report/generation_128.jsonl
+artifacts-poc/report/graded_generations.jsonl
 !artifacts-poc/review/
-!artifacts-poc/review/llm_generation_grades.jsonl
 artifacts-poc/review/generation.jsonl
+artifacts-poc/review/generation_rubric.md
+artifacts-poc/review/llm_generation_grades.jsonl

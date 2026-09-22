@@ -23,9 +23,9 @@ def run(config, root, device, allow_unreviewed):
                   ["evaluate", "--condition", "base"] + extra, ["report"],
                   ["evaluate", "--condition", "response"] + extra, ["report"],
                   ["evaluate", "--condition", "instruction"] + extra,
-                  ["blind"], ["report"]]
+                  ["report"] if allow_unreviewed else ["report", "--final"]]
         state = {"pid": os.getpid(), "started_at": datetime.now(timezone.utc).isoformat(), "status": "running",
-                 "human_review_required": True, "allow_unreviewed": allow_unreviewed}
+                 "negative_review_required": True, "allow_unreviewed": allow_unreviewed}
         child = None
 
         def stop(signum, frame):
