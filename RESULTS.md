@@ -28,6 +28,8 @@ GPT-2 small ranked the supplied correct answer above the hard negative on most o
 
 After tuning, both models got 16 of 24 hard negatives using total log probability. Instruction tuning got one more item than response-only tuning under per-token scoring (16 versus 15). The paired bootstrap interval for response-only minus instruction tuning on that measure was −12.5 to 0 percentage points. These 24 items do not establish a reliable advantage for either method.
 
+The response-only model also has a saved checkpoint after update 24. Its validation loss was slightly higher than at update 12 (3.1842 versus 3.1776), so the original selection rule chose update 12. As a [fixed-update sensitivity check](artifacts-poc/report/response_fixed_24.json), I scored update 24 against the same test pairs. Hard-negative ranking remained **16/24 by total log probability and 15/24 per token**. This check matches the instruction model's selected update count without changing the primary checkpoint choice after seeing the test results.
+
 ## Scope
 
 This run used one seed, GPT-2 small, 24 ranking items, and two epochs of tuning. Both tuned models completed 24 optimizer updates on the same responses. Validation selected the response-only checkpoint after 12 updates and the instruction-tuned checkpoint after 24. Training optimizes response likelihood, which need not improve pairwise accuracy. The LLM judgments for hard negatives are recorded in the repository.
