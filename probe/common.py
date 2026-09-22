@@ -63,6 +63,8 @@ def device_for(requested="auto"):
 
 def load_config(path):
     cfg = read_json(path)
+    require(cfg.get("checkpoint_policy", "validation") in {"validation", "final"},
+            "checkpoint_policy must be validation or final")
     require(cfg["effective_batch_size"] % cfg["micro_batch_size"] == 0,
             "Effective batch size must be divisible by micro batch size")
     require(all(cfg[k] > 0 for k in ["micro_batch_size", "effective_batch_size", "epochs", "learning_rate", "bootstrap_samples"]),

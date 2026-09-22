@@ -6,7 +6,7 @@ Hewitt et al. define response ranking as “assigning a higher likelihood to the
 
 See **[RESULTS.md](RESULTS.md)** for the result table, interpretation, and chart.
 
-With longer tuning, both models completed 24 updates. Validation selected the response-only checkpoint at update 12 and the instruction-tuned checkpoint at update 24. On hard negatives, both scored **16/24 (66.7%)** using total log probability; per-token scores were **15/24** and **16/24**, respectively.
+Both tuned models are evaluated after **24 updates**. On hard negatives, both scored **16/24 (66.7%)** using total log probability; per-token scores were **15/24** for response-only tuning and **16/24** for instruction tuning.
 
 ## What I ran
 
@@ -15,6 +15,8 @@ With longer tuning, both models completed 24 updates. Validation selected the re
 - Conditions: pretrained, response-only fine tuning, instruction fine tuning
 - Fine tuning: 24 training examples, 2 epochs, effective batch 2, same responses in both tuning conditions
 - Evaluation: 24 held-out response-ranking items
+
+The final-checkpoint rule was adopted after an earlier validation-selected analysis. The comparison here is exploratory.
 
 An LLM checked the hard negatives for accidental correctness. Its judgments are labeled in the data.
 

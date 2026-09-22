@@ -145,13 +145,22 @@ def train(cfg, root, mode, requested_device, smoke_steps=0):
         print(f"{mode}: epoch {epoch+1}, validation NLL {val:.4f}", flush=True)
 
 
-def load_condition(root, condition, device):
+def load_condition(root, condition, device, checkpoint_policy="validation"):
     if condition == "base":
         return load_base(root, device)
     run = root / "runs" / condition
     meta = read_json(run / "training.json")
     require(meta.get("complete") and not meta.get("smoke"), f"{condition} training is incomplete")
     require(meta["experiment_id"] == read_json(root / "data" / "manifest.json")["experiment_id"], "Checkpoint data mismatch")
+    if checkpoint_policy == "final":
+        checkpoint = torch.load(run / "latest.pt", map_location="cpu", weights_only=True, mmap=True)
+        require(checkpoint["experiment_id"] == meta["experiment_id"] and checkpoint["step"] == meta["updates"],
+                "Final checkpoint does not match completed training")
+        model, tokenizer = load_base(root, device)
+        model.load_state_dict(checkpoint["model"])
+        del checkpoint
+        return model, tokenizer
+    require(checkpoint_policy == "validation", "Unknown checkpoint policy")
     model = AutoModelForCausalLM.from_pretrained(run / "best", local_files_only=True,
                                                 attn_implementation="sdpa").to(device)
     tokenizer = AutoTokenizer.from_pretrained(run / "best", local_files_only=True)

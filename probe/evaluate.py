@@ -9,10 +9,14 @@ from .modeling import prompt_ids, score_response
 from .train import load_condition
 
 
-def condition_fingerprint(root, condition):
+def condition_fingerprint(root, condition, checkpoint_policy="validation"):
     if condition == "base":
         return read_json(root / "raw" / "sources.json")["model_revision"]
-    return digest(read_json(root / "runs" / condition / "training.json"))
+    run = read_json(root / "runs" / condition / "training.json")
+    if checkpoint_policy == "final":
+        return digest({"training": run, "checkpoint_policy": "final", "update": run["updates"]})
+    require(checkpoint_policy == "validation", "Unknown checkpoint policy")
+    return digest(run)
 
 
 def evaluate(cfg, root, condition, requested_device, allow_unreviewed=False):
@@ -21,13 +25,14 @@ def evaluate(cfg, root, condition, requested_device, allow_unreviewed=False):
     pairs, reviewed = validated_pairs(root, allow_unreviewed)
     device = device_for(requested_device)
     seed_all(cfg["seed"])
-    model, tokenizer = load_condition(root, condition, device)
+    policy = cfg.get("checkpoint_policy", "validation")
+    model, tokenizer = load_condition(root, condition, device, policy)
     model.eval()
     test = {r["id"]: r for r in read_jsonl(root / "data" / "test.jsonl")}
     out = root / "evaluation" / condition
     out.mkdir(parents=True, exist_ok=True)
     identity = {"experiment_id": manifest["experiment_id"], "pairs_hash": digest(pairs),
-                "checkpoint": condition_fingerprint(root, condition)}
+                "checkpoint": condition_fingerprint(root, condition, policy)}
     if (out / "identity.json").exists():
         require(read_json(out / "identity.json") == identity,
                 "Evaluation inputs changed. Move the existing evaluation directory before rerunning.")
